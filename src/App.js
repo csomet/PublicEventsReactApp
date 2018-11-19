@@ -1,25 +1,60 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
-import './App.css';
+import Header from './components/Header';
+import Form from './components/Form';
+import Events from './components/Events';
 
 class App extends Component {
+  
+  token = 'ACEHVBPMHBQQG5V76YMW'
+
+  state = {
+    categories: [],
+    events: []
+  }
+
+  componentDidMount(){
+    this.getAllCategories();
+  }
+
+  getAllEvents = async(data) =>{
+    
+      const URL = `https://www.eventbriteapi.com/v3/events/search/?q=${data.name}&sort_by=date&categories=${data.category}&token=${this.token}`;
+
+      await fetch(URL)
+            .then(response => {
+              return response.json();
+            })
+            .then(event =>{
+              this.setState({
+                events : event.events
+              })
+            })
+
+  }
+
+  getAllCategories = async() => {
+
+      const URL = `https://www.eventbriteapi.com/v3/categories/?token=${this.token}`;
+
+      await fetch(URL)
+              .then(response => {
+                return response.json();
+              })
+              .then(cat => {
+                 this.setState({
+                   categories : cat.categories
+                 })
+              })
+  }
+  
   render() {
     return (
       <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
+          <Header />
+          <div className="uk-container">
+            <Form getAllEvents={this.getAllEvents} categories={this.state.categories}/>
+            <Events events={this.state.events}/>
+          </div>
       </div>
     );
   }

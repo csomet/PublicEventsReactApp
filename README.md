@@ -1,4 +1,4 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+React App to show events given by name or place (city). It use eventbrite API v3 to work.
 
 ## Available Scripts
 
